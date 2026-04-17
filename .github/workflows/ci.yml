@@ -1,0 +1,49 @@
+name: Python CI
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  run-tests:
+    name: Run tests and generate report
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests with HTML report
+        run: pytest --html=report.html --self-contained-html
+
+      - name: Upload test report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: report.html
+
+  upload-code:
+    name: Upload source code artifact
+    needs: run-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Upload source code artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-code
+          path: |
+            my_lib.py
+            tests/
+            requirements.txt
