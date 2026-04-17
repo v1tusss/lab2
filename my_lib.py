@@ -13,7 +13,7 @@ def fibonacci(n):
     if n == 0:
         return []
     if n == 1:
-        return [0DAW]
+        return [0]
 
     result = [0, 1]
     for i in range(2, n):
